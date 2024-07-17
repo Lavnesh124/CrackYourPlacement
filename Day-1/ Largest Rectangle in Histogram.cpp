@@ -1,0 +1,56 @@
+//  https://leetcode.com/problems/largest-rectangle-in-histogram/submissions/1324163550/
+
+#include <iostream>
+#include <vector>
+#include <stack>
+using namespace std;
+
+class Solution
+{
+public:
+    int largestRectangleArea(vector<int> &height)
+    {
+        int n = height.size();
+        stack<int> st;
+        vector<int> left(n), right(n);
+        for (int i = 0; i < n; i++)
+        {
+            while (!st.empty() && height[st.top()] >= height[i])
+            {
+                st.pop();
+            }
+            if (st.empty())
+                left[i] = 0;
+            else
+            {
+                left[i] = st.top() + 1;
+            }
+            st.push(i);
+        }
+        while (!st.empty())
+        {
+            st.pop();
+        }
+        for (int i = n - 1; i >= 0; i--)
+        {
+            while (!st.empty() && height[st.top()] >= height[i])
+            {
+                st.pop();
+            }
+            if (st.empty())
+                right[i] = n - 1;
+            else
+            {
+                right[i] = st.top() - 1;
+            }
+            st.push(i);
+        }
+        int maxi = 0;
+
+        for (int i = 0; i < n; i++)
+        {
+            maxi = max(maxi, height[i] * (right[i] - left[i] + 1));
+        }
+        return maxi;
+    }
+};
